@@ -3,9 +3,9 @@ import setuptools
 
 setup(
   name = 'utils',
-  py_modules = ['utils'],
+  py_modules = ['geohashUtils', 'numpyUtils', 'pandasUtils', 'pyUtils', 'sparkUtils', 'timeUtils', 'tsUtils', 'tsneUtils'],
   version = '0.0.1',
-  description = 'General Utilities',
+  description = 'General Utility Function',
   long_description = open('README.md').read(),
   author = 'Thomas Gadfort',
   author_email = 'tgadfort@gmail.com',
@@ -20,6 +20,8 @@ setup(
     'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Utilities'
   ],
-  install_requires = ['numpy', 'pandas', 'matplotlib', 'python-dateutil']
+  install_requires = ['pandas', 'numpy']
 )
  
+
+
