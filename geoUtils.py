@@ -1,6 +1,7 @@
-
 from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType, DoubleType, FloatType
+from numpy import pi, cos
+
 
 def getGeo3(lat, long):
     try:
@@ -43,6 +44,65 @@ def getGeo8(lat, long):
     except:
         retval = None
     return retval
+
+
+def convertMetersToLat(dist, debug=False):
+    # Earth's radius, sphere
+    R=6378137
+
+    # Distances
+    dn = dist
+
+    # Coordinate offsets in radians
+    dLat = dn/R
+    
+    # OffsetPosition, decimal degrees
+    lat = dLat * 180/pi
+    
+    return lat
+
+
+def convertLatToMeters(ang, debug=False):
+    # Earth's radius, sphere
+    R=6378137
+    
+    # convert decimal to radians
+    dLat = ang * pi/180
+    
+    # scale to Earth's radius
+    dist = dLat * R
+    
+    return dist
+
+
+def convertMetersToLong(dist, lat, debug=False):
+    # Earth's radius, sphere
+    R=6378137
+
+    # Distances
+    de = dist
+
+    # Coordinate offsets in radians
+    dLon = de/(R*cos(pi*lat/180))
+    
+    # OffsetPosition, decimal degrees
+    lng = dLon * 180/pi
+    
+    return lng
+
+
+def convertLongToMeters(ang, lat, debug=False):
+    # Earth's radius, sphere
+    R=6378137
+    
+    # convert decimal to radians
+    dLon = ang * pi/180
+    dLat = lat * pi/180
+    
+    # scale to Earth's radius with known latitude
+    dist = dLon * (R*cos(dLat))
+    
+    return dist
 
 prec=""
 get_geo3_udf = udf(lambda lat,long: getGeo3(lat, long), StringType())
