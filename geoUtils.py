@@ -111,5 +111,3 @@ get_geo5_udf = udf(lambda lat,long: getGeo5(lat, long), StringType())
 get_geo6_udf = udf(lambda lat,long: getGeo6(lat, long), StringType())
 get_geo7_udf = udf(lambda lat,long: getGeo7(lat, long), StringType())
 get_geo8_udf = udf(lambda lat,long: getGeo8(lat, long), StringType())
-
-_, _ = clock("Last Run")
