@@ -1,13 +1,14 @@
 # coding: utf-8
 
 from sklearn.externals import joblib
-from os.path import getsize, exists, join, dirname, basename
+from os.path import getsize, exists, join, dirname, basename, splitext
 from os import listdir
 from sklearn.model_selection import train_test_split
 from glob import glob, glob1
 from numpy import ndarray, reshape
 from pandas import DataFrame, Series, read_csv
-
+import json
+import yaml
 from timeUtils import clock, elapsed
 from pandasUtils import dropColumns
 
@@ -33,36 +34,6 @@ def showSize(filename):
         fsize /= 1e3
         units = "kB"
     print("  --> This file is {0}{1}.".format(round(fsize,1), units))
-
-    
-def saveJoblib(data, filename, compress=True):
-    """
-    Save data using joblib
-    
-    Inputs:
-      > data: anything that can be pickled
-      > filename: the saved filename
-      > compress (True by default): compress the output file?
-      
-    Output:
-      > None
-    """
-    joblib.dump(data, filename, compress=compress)
-    showSize(filename)
-
-    
-def loadJoblib(filename):
-    """
-    Load data using joblib
-    
-    Inputs:
-      > filename: the saved filename
-      
-    Output:
-      > None
-    """
-    data = joblib.load(filename)
-    return data
 
 
 
@@ -449,3 +420,124 @@ def findExt(basedir, ext, debug = False):
     else:
         files = [join(basedir,x) for x in glob1(basedir, "*"+ext)]
     return files
+
+
+
+
+
+
+###############################################################################
+#
+# YAML
+#
+###############################################################################
+def saveYaml(yfile, ydata):
+    yaml.dump(ydata, open(yfile, "w"), default_flow_style=False, allow_unicode = True)
+
+def getYaml(yfile):
+    ydata = yaml.load(open(yfile))
+    return ydata
+
+
+
+###############################################################################
+#
+# JSON
+#
+###############################################################################
+def saveJSON(jfile, jdata):
+    json.dump(jdata, open(jfile, "w"))
+
+def getJSON(jfile):
+    jdata = json.load(open(jfile))
+    return jdata
+
+
+
+###############################################################################
+#
+# PICKLE
+#
+###############################################################################
+def saveJoblib(data, filename, compress=True):
+    """
+    Save data using joblib
+    
+    Inputs:
+      > data: anything that can be pickled
+      > filename: the saved filename
+      > compress (True by default): compress the output file?
+      
+    Output:
+      > None
+    """
+    savePICKLE(data, filename, compress)
+    
+def savePICKLE(pfile, pdata):
+    """
+    Save data using joblib
+    
+    Inputs:
+      > data: anything that can be pickled
+      > filename: the saved filename
+      > compress (True by default): compress the output file?
+      
+    Output:
+      > None
+    """
+    joblib.dump(data, filename, compress=compress)
+    showSize(filename)
+
+def loadJoblib(filename):
+    """
+    Load data using joblib
+    
+    Inputs:
+      > filename: the saved filename
+      
+    Output:
+      > None
+    """
+    return getPICKLE(filename)
+    
+def getPICKLE(pfile):
+    """
+    Load data using joblib
+    
+    Inputs:
+      > filename: the saved filename
+      
+    Output:
+      > None
+    """
+    data = joblib.load(pfile)
+    return data
+
+
+
+###############################################################################
+#
+# General
+#
+###############################################################################
+def saveFile(ifile, idata):
+    if isinstance(idata, pickle):
+        savePICKLE(pfile=ifile, pdata=idata)
+    elif isinstance(idata, json):
+        saveJSON(jfile=ifile, jdata=idata)
+    elif isinstance(idata, yaml):
+        saveYaml(yfile=ifile, ydata=idata)
+    else:
+        raise ValueError("Did not recognize format {0}".format(type(idata)))
+        
+        
+def getFile(ifile):
+    ext = splitext(basename(ifile))[1]
+    if ext == ".p":
+        return getPICKLE(pfile=ifile)
+    elif ext == ".json":
+        return getJSON(jfile=ifile)
+    elif ext == ".yaml":
+        return getYaml(yfile=ifile)
+    else:
+        raise ValueError("Did not recognize extension {0}".format(ext))

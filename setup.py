@@ -3,7 +3,7 @@ import setuptools
 
 setup(
   name = 'utils',
-  py_modules = ['timeUtils', 'numpyUtils', 'pyUtils', 'sparkUtils', 'tsUtils', 'geoUtils', 'pandasUtils', 'tsneUtils', 'ioUtils'],
+  py_modules = ['timeUtils', 'numpyUtils', 'pyUtils', 'sparkUtils', 'tsUtils', 'geoUtils', 'pandasUtils', 'tsneUtils', 'ioUtils', 'webUtils', 'fsUtils', 'searchUtils', 'uidUtils'],
   version = '0.0.1',
   description = 'General Utility Function',
   long_description = open('README.md').read(),
@@ -20,8 +20,5 @@ setup(
     'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Utilities'
   ],
-  install_requires = ['numpy', 'pandas', 'matplotlib', 'python-dateutil', 'seaborn', 'pyspark']
+  install_requires = ['numpy', 'pandas', 'matplotlib', 'python-dateutil', 'seaborn', 'pyspark', 'bs4']
 )
- 
-
-
