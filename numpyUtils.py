@@ -4,6 +4,10 @@ from numpy import concatenate, ndarray, asarray, linspace, percentile
 from pandas import Series
 
 
+def isArray(array):
+    return isinstance(array, ndarray)
+
+
 def mergeArrays(arrays):
     """
     Merge Arrays

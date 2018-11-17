@@ -135,7 +135,7 @@ def getHTML(htmldata, allowError = False, debug = False):
             raise ValueError("Could not read from",htmldata)
 
     try:
-        bsdata = BeautifulSoup(htmldata)
+        bsdata = BeautifulSoup(htmldata, "lxml")
     except:
         if allowError:
             return None
