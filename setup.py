@@ -20,5 +20,5 @@ setup(
     'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Utilities'
   ],
-  install_requires = ['numpy>=1.15.1', 'pandas>=0.23.4', 'matplotlib>=2.2.3', 'python-dateutil>=2.7.3', 'seaborn>=0.9.0', 'pyspark', 'bs4>=0.0.1']
+  install_requires = ['numpy>=1.15.1', 'pandas>=0.23.4', 'matplotlib>=2.2.2', 'python-dateutil>=2.7.3', 'seaborn>=0.9.0', 'pyspark', 'bs4>=0.0.1']
 )
