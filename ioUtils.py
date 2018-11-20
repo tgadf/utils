@@ -9,6 +9,7 @@ from numpy import ndarray, reshape
 from pandas import DataFrame, Series, read_csv
 import json
 import yaml
+import pickle
 from timeUtils import clock, elapsed
 from pandasUtils import dropColumns
 
@@ -28,44 +29,6 @@ def appendSparkData(spdf, dbname, tablename):
     start, cmt = clock("Appending spark dataframe to {0}.{1}".format(dbname, tablename))
     spdf.write.mode('append').format('parquet').saveAsTable("{0}.{1}".format(dbname, tablename))
     elapsed(start, cmt)
-        
-    
-    
-
-def getBasename(name):
-    bname = basename(name)
-    return bname
-
-def getDirname(name):
-    dname = dirname(name)
-    return dname
-
-
-def findPattern(basedir, pattern, debug = False):
-    if basedir == None: return []
-    files = [x for x in listdir(basedir) if x.find(pattern) != -1]
-    files = glob(join(basedir, "*"+pattern+"*"))
-    return files
-     
-def findPatternExt(basedir, pattern, ext, debug = False):
-    if basedir == None: return []
-    files = findExt(basedir, ext)
-    files = [x for x in files if x.find(pattern) != -1]
-    return files 
-    
-def findExt(basedir, ext, debug = False):
-    if basedir == None: return []
-    if isinstance(ext, list):
-        files = []
-        for exten in ext:
-            files += [join(basedir,x) for x in glob1(basedir, "*"+exten)]
-    else:
-        files = [join(basedir,x) for x in glob1(basedir, "*"+ext)]
-    return files
-
-
-
-
 
 
 ##########################################################################################
@@ -79,10 +42,13 @@ def showSize(filename):
     
     Inputs: filename
     Outputs: None
-    """
+    """    
     fsize = getsize(filename)
     units = "B"
-    if fsize > 1e6:
+    if fsize > 1e9:
+        fsize /= 1e9
+        units = "BB"
+    elif fsize > 1e6:
         fsize /= 1e6
         units = "MB"
     elif fsize > 1e3:
@@ -137,15 +103,15 @@ def saveJoblib(data, filename, compress=True):
     Output:
       > None
     """
-    savePICKLE(data, filename, compress)
+    savePICKLE(filename, data, compress)
     
-def savePICKLE(pdata, pfile, compress=True):
+def savePICKLE(pfile, pdata, compress=True):
     """
     Save data using joblib
     
     Inputs:
-      > pdata: anything that can be pickled
       > pfile: the saved filename
+      > pdata: anything that can be pickled
       > compress (True by default): compress the output file?
       
     Output:
@@ -186,18 +152,28 @@ def getPICKLE(pfile):
 # General
 #
 ###############################################################################
-def saveFile(ifile, idata):
-    if isinstance(idata, pickle):
+def saveFile(ifile, idata, debug=False):
+    if debug:
+        print("Saving data to {0}".format(ifile))
+    ext = splitext(basename(ifile))[1]
+    if ext == ".p":
         savePICKLE(pfile=ifile, pdata=idata)
-    elif isinstance(idata, json):
+    elif ext == ".json":
         saveJSON(jfile=ifile, jdata=idata)
-    elif isinstance(idata, yaml):
+    elif ext == ".yaml":
         saveYaml(yfile=ifile, ydata=idata)
     else:
-        raise ValueError("Did not recognize format {0}".format(type(idata)))
+        raise ValueError("Did not recognize extension format {0}".format(ext))
+    if debug:
+        print("Saved data to {0}".format(ifile))
+        showSize(ifile)
+
         
         
-def getFile(ifile):
+def getFile(ifile, debug=False):
+    if debug:
+        print("Loading data from {0}".format(ifile))
+        showSize(ifile)
     ext = splitext(basename(ifile))[1]
     if ext == ".p":
         return getPICKLE(pfile=ifile)
