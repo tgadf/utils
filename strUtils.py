@@ -95,7 +95,7 @@ def nice(name, size):
         return name
     while len(name) < size:
         name += " "
-    if name > size:
+    if len(name) > size:
         name = name[:size]
     return name
 
