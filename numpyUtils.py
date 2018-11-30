@@ -1,12 +1,27 @@
 # coding: utf-8
 
-from numpy import concatenate, ndarray, asarray, linspace, percentile
+from numpy import concatenate, ndarray, asarray, linspace, percentile, int64, float64
 from pandas import Series
 
 
 def isArray(array):
     return isinstance(array, ndarray)
 
+def isInt64(value):
+    return isinstance(value, int64)
+
+def isFloat64(value):
+    return isinstance(value, float64)
+
+def isNumeric(value):
+    return isInt64(value) | isFloat64(value)
+
+def isNumericDtype(dtype):
+    if dtype == float64:
+        return True
+    elif dtype == int64:
+        return True
+    return False
 
 def mergeArrays(arrays):
     """
