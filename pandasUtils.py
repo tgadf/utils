@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-from numpy import ndarray, reshape, random, repeat, linspace, percentile, arange, std, append, logical_and
+from numpy import ndarray, reshape, random, repeat, linspace, percentile, arange, std, append, logical_and, int64, float64
 from pandas import DataFrame, Series, read_csv, Timestamp, offsets, to_datetime
 from pandas.core.indexes import datetimes
 from pyUtils import getKeys
@@ -248,7 +248,33 @@ def castStr(coldata):
     return coldata.astype(str)
 
 def convertToDate(coldata):
-    if isinstance(coldata, Series):
+    try:
         return coldata.dt.date
-    else:
+    except:
         return coldata
+    
+    
+########################################################################################################
+# Fix Type when saving data frame
+########################################################################################################
+def fixType(value):
+    import numpy as np
+    if isinstance(value, tuple):
+        value = str(value)
+    elif isinstance(value, int64):
+        value = int(value)
+    elif isinstance(value, float64):
+        value = float(value)
+    elif isinstance(value, str):
+        value = str(value)
+    elif isinstance(value, float):
+        value = float(value)
+    elif isinstance(value, int):
+        value = int(value)
+    elif isinstance(value, type(None)):
+        value = None
+    elif isinstance(value, list):
+        value = str(value)
+    else:
+        raise ValueError("Unknown Type: {0} --> {1}".format(type(value), value))
+    return value
