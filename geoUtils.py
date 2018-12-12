@@ -3,6 +3,7 @@ from pyspark.sql.types import StringType, DoubleType, FloatType
 from numpy import pi, cos
 from haversine import haversine
 from pandasUtils import isDataFrame
+import geohash
 
 
 
@@ -52,6 +53,11 @@ def funcGeo8(x):
     try:
         lat = x[0]
         long = x[1]
+    except:
+        retval = 'yyyyyyyy'
+        return retval
+
+    try:
         retval = geohash.encode(lat, long, precision=8)
     except:
         retval = 'xxxxxxxx'
@@ -62,7 +68,7 @@ def getGeo8(lat, long):
     try:
         retval = geohash.encode(lat, long, precision=8)
     except:
-        retval = None
+        retval = 'zzzzzzzz'
     return retval
 
 # Apply Geo8 function to DataFrame columns
@@ -84,7 +90,7 @@ get_geo8_udf = udf(lambda lat,long: getGeo8(lat, long), StringType())
 # Distance Metrics
 #
 ############################################################################################################
-def getDist(self, gcode1, gcode2, units='m'):
+def getDist(gcode1, gcode2, units='m'):
     if all((isinstance(x, str) for x in [gcode1, gcode2])):
         try:
             pnt1 = geohash.decode_exactly(gcode1)[:2]
