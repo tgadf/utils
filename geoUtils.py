@@ -98,9 +98,21 @@ def getDist(gcode1, gcode2, units='m'):
             dist = haversine(pnt1, pnt2)
         except:
             dist = None
-    elif all((isinstance(x, tuple) for x in [gcode1, gcode2])):
+    elif all((isinstance(x, (list,tuple)) for x in [gcode1, gcode2])):
         try:
             dist = haversine(gcode1, gcode2)
+        except:
+            dist = None
+    elif isinstance(gcode1, str) and isinstance(gcode2, (list,tuple)):
+        try:
+            pnt1 = geohash.decode_exactly(gcode1)[:2]
+            dist = haversine(pnt1, gcode2)
+        except:
+            dist = None
+    elif isinstance(gcode2, str) and isinstance(gcode1, (list,tuple)):
+        try:
+            pnt2 = geohash.decode_exactly(gcode2)[:2]
+            dist = haversine(pnt2, gcode1)
         except:
             dist = None
     else:

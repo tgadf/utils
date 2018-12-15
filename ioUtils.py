@@ -66,7 +66,9 @@ def showSize(filename):
 def saveYaml(yfile, ydata):
     yaml.dump(ydata, open(yfile, "w"), default_flow_style=False, allow_unicode = True)
 
-def getYaml(yfile):
+def getYaml(yfile, debug=False):
+    if debug:
+        print("Loading {0}".format(yfile))
     ydata = yaml.load(open(yfile))
     return ydata
 
@@ -80,7 +82,9 @@ def getYaml(yfile):
 def saveJSON(jfile, jdata):
     json.dump(jdata, open(jfile, "w"))
 
-def getJSON(jfile):
+def getJSON(jfile, debug=False):
+    if debug:
+        print("Loading {0}".format(jfile))
     jdata = json.load(open(jfile))
     return jdata
 
@@ -120,7 +124,7 @@ def savePICKLE(pfile, pdata, compress=True):
     joblib.dump(pdata, pfile, compress=compress)
     showSize(pfile)
 
-def loadJoblib(filename):
+def loadJoblib(filename, debug=False):
     """
     Load data using joblib
     
@@ -132,16 +136,19 @@ def loadJoblib(filename):
     """
     return getPICKLE(filename)
     
-def getPICKLE(pfile):
+def getPICKLE(pfile, debug=False):
     """
     Load data using joblib
     
     Inputs:
       > filename: the saved filename
+      > debug (optional)
       
     Output:
       > None
     """
+    if debug:
+        print("Loading {0}".format(pfile))
     data = joblib.load(pfile)
     return data
 
@@ -176,10 +183,10 @@ def getFile(ifile, debug=False):
         showSize(ifile)
     ext = splitext(basename(ifile))[1]
     if ext == ".p":
-        return getPICKLE(pfile=ifile)
+        return getPICKLE(pfile=ifile, debug=debug)
     elif ext == ".json":
-        return getJSON(jfile=ifile)
+        return getJSON(jfile=ifile, debug=debug)
     elif ext == ".yaml":
-        return getYaml(yfile=ifile)
+        return getYaml(yfile=ifile, debug=debug)
     else:
         raise ValueError("Did not recognize extension {0}".format(ext))
