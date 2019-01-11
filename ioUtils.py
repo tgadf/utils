@@ -76,6 +76,23 @@ def getYaml(yfile, debug=False):
 
 ###############################################################################
 #
+# HTML
+#
+###############################################################################
+def saveHTML(yfile, ydata):
+    raise ValueError("Don't do this!!")
+    yaml.dump(ydata, open(yfile, "w"), default_flow_style=False, allow_unicode = True)
+
+def getHTML(hfile, debug=False):
+    if debug:
+        print("Loading {0}".format(hfile))
+    hdata = open(hfile).read()
+    return hdata
+
+
+
+###############################################################################
+#
 # JSON
 #
 ###############################################################################
@@ -188,5 +205,7 @@ def getFile(ifile, debug=False):
         return getJSON(jfile=ifile, debug=debug)
     elif ext == ".yaml":
         return getYaml(yfile=ifile, debug=debug)
+    elif ext == ".html":
+        return getHTML(hfile=ifile, debug=debug)
     else:
         raise ValueError("Did not recognize extension {0}".format(ext))
