@@ -8,6 +8,10 @@ from calendar import monthrange
 from pandas import Timestamp
 import dateutil.parser
     
+    
+################################################################################
+# Return datetime object
+################################################################################
 def getDateTime(dtval, dtformat='%Y-%m-%d'):
     if isPandas(dtval):
         dtval = convertPandasTimestamp(dtval)
@@ -36,6 +40,10 @@ def getDateTime(dtval, dtformat='%Y-%m-%d'):
                 
     return dtobj
 
+
+################################################################################
+# Return string of datetime object
+################################################################################
 def printDateTime(dtval,dtformat="%Y-%m-%d"):
     if isinstance(dtval,str):
         dtobj = getDateTime(dtval)
@@ -56,6 +64,7 @@ def printDateTime(dtval,dtformat="%Y-%m-%d"):
         dtstr = dtval
               
     return dtstr
+
 
 
 def createDateFromDMY(day, month, year):
@@ -147,22 +156,39 @@ def clock(comment=None, showTime=True):
     return val, comment
 
 
-def elapsed(start,comment=None,showTime=True):
+def update(start, proc, total):
+    if total > 0 and proc > 0:
+        dtime = (dt.now() - start).seconds
+        rate = proc / dtime
+        estT = total / rate
+        remT = estT - dtime
+        
+        remaining = round(remT/60.0,1)
+        fullrate  = round(rate,0)
+
+        print("  Processed {0}/{1}. There are {2} minutes remaining  (R={3} evt/sec)".format(proc, total, remaining, fullrate))
+        
+
+def elapsed(start, comment=None, showTime=True):
     if isinstance(start, tuple):
         try:
             comment=start[1]
             start=start[0]
         except:
             start=start[0]
+            
     if comment is None:
         comment = "End"
     elif comment is not None:
         if not comment.startswith("Done with"):
             comment = "Done with {0}".format(comment)
-            
+          
+                  
     end, _ = clock(comment=comment, showTime=showTime)
     dtime = end-start
     dtime = dtime.seconds
+
+
     if dtime>60:
         print("Process [{0}] took {1} minutes.".format(comment, round(dtime/60.0,1)))
     else:

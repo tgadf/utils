@@ -54,7 +54,7 @@ def getSafariURL(url, savename, dtime = 5, debug = False):
     delay {1}
     set myString to source of document 1
     end tell
-    '''.format(url, dtime)
+    '''.format(url, dtime).encode()
     
     if False:
         dscript = '''

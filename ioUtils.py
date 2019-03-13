@@ -66,7 +66,7 @@ def showSize(filename):
 def saveYaml(yfile, ydata):
     yaml.dump(ydata, open(yfile, "w"), default_flow_style=False, allow_unicode = True)
 
-def getYaml(yfile, debug=False):
+def getYaml(yfile, version=3, debug=False):
     if debug:
         print("Loading {0}".format(yfile))
     ydata = yaml.load(open(yfile))
@@ -83,11 +83,27 @@ def saveHTML(yfile, ydata):
     raise ValueError("Don't do this!!")
     yaml.dump(ydata, open(yfile, "w"), default_flow_style=False, allow_unicode = True)
 
-def getHTML(hfile, debug=False):
+def getHTML(hfile, version=3, debug=False):
     if debug:
         print("Loading {0}".format(hfile))
     hdata = open(hfile).read()
     return hdata
+
+
+
+###############################################################################
+#
+# Txt
+#
+###############################################################################
+def saveTxt(tfile, tdata):
+    json.dump(jdata, open(jfile, "w"))
+    
+def getTxt(tfile, version=3, debug=False):
+    if debug:
+        print("Loading {0}".format(tfile))
+    tdata = open(tfile).read()
+    return tdata
 
 
 
@@ -99,7 +115,7 @@ def getHTML(hfile, debug=False):
 def saveJSON(jfile, jdata):
     json.dump(jdata, open(jfile, "w"))
 
-def getJSON(jfile, debug=False):
+def getJSON(jfile, version=3, debug=False):
     if debug:
         print("Loading {0}".format(jfile))
     jdata = json.load(open(jfile))
@@ -141,7 +157,7 @@ def savePICKLE(pfile, pdata, compress=True):
     joblib.dump(pdata, pfile, compress=compress)
     showSize(pfile)
 
-def loadJoblib(filename, debug=False):
+def loadJoblib(filename, version=3, debug=False):
     """
     Load data using joblib
     
@@ -151,9 +167,9 @@ def loadJoblib(filename, debug=False):
     Output:
       > None
     """
-    return getPICKLE(filename)
+    return getPICKLE(filename, version)
     
-def getPICKLE(pfile, debug=False):
+def getPICKLE(pfile, version=3, debug=False):
     """
     Load data using joblib
     
@@ -166,7 +182,11 @@ def getPICKLE(pfile, debug=False):
     """
     if debug:
         print("Loading {0}".format(pfile))
-    data = joblib.load(pfile)
+
+    if version == 2:
+        data = pickle.load(open(pfile, 'rb'), encoding='latin1')
+    else:
+        data = joblib.load(pfile)
     return data
 
 
@@ -194,18 +214,20 @@ def saveFile(ifile, idata, debug=False):
 
         
         
-def getFile(ifile, debug=False):
+def getFile(ifile, version=3, debug=False):
     if debug:
         print("Loading data from {0}".format(ifile))
         showSize(ifile)
     ext = splitext(basename(ifile))[1]
     if ext == ".p":
-        return getPICKLE(pfile=ifile, debug=debug)
+        return getPICKLE(pfile=ifile, version=version, debug=debug)
     elif ext == ".json":
-        return getJSON(jfile=ifile, debug=debug)
+        return getJSON(jfile=ifile, version=version, debug=debug)
     elif ext == ".yaml":
-        return getYaml(yfile=ifile, debug=debug)
+        return getYaml(yfile=ifile, version=version, debug=debug)
     elif ext == ".html":
-        return getHTML(hfile=ifile, debug=debug)
+        return getHTML(hfile=ifile, version=version, debug=debug)
+    elif ext == ".txt":
+        return getTxt(tfile=ifile, version=version, debug=debug)
     else:
         raise ValueError("Did not recognize extension {0}".format(ext))
