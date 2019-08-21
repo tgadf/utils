@@ -6,6 +6,7 @@ Created on Sat Mar 11 17:43:30 2017
 """
 
 from urllib.request import urlopen, pathname2url
+from urllib.parse import urljoin
 #from urllib import pathname2url
 from os.path import getsize
 from os import remove
@@ -15,11 +16,19 @@ import subprocess
 from bs4 import BeautifulSoup, element
 
 
+
+            
+
 ################################################################################
 #
 # Download Web Data
 #
 ################################################################################
+def makeURL(baseURL, extraURL):
+    url = urljoin(baseURL, extraRef)
+    return url
+
+
 def getURL(url, savename, debug = False):
     if debug:
         print("Downloading {0}".format(url))

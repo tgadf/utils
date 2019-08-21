@@ -186,10 +186,24 @@ def elapsed(start, comment=None, showTime=True):
                   
     end, _ = clock(comment=comment, showTime=showTime)
     dtime = end-start
-    dtime = dtime.seconds
+    seconds, microseconds = dtime.seconds, dtime.microseconds
+    
+    
+    print("Process [{0}] took ", end="")
+    ## Convert to minutes
+    
+    units = None
+    if seconds > 60:
+        result = round(seconds/60.0, 1)
+        units  = "minutes"
+    elif seconds > 0.5:
+        result = round(seconds, 1)
+        units  = "seconds"
+    elif microseconds > 1e3:
+        result = round(microseconds/1e3, 0)
+        units  = "millseconds"
+    else:        
+        result = round(microseconds, 0)
+        units  = "microseconds"
 
-
-    if dtime>60:
-        print("Process [{0}] took {1} minutes.".format(comment, round(dtime/60.0,1)))
-    else:
-        print("Process [{0}] took {1} seconds.".format(comment, round(dtime,1)))
+    print("{0} {1}.".format(result, units))

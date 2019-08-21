@@ -100,12 +100,20 @@ def getPath(dirval):
 #
 ###############################################################################
 def isFile(filename, debug = False):
-    if isfile(filename):
-        return True
-    return False
+    if filename is None:
+        return False
+    retval = False
+    try:
+        if isfile(filename):
+            retval = True
+    except:
+        retval = False
+    return retval
 
 
 def isDir(dirval, debug = False):
+    if dirval is None:
+        return False
     if isdir(dirval):
         return True
     return False
