@@ -225,7 +225,7 @@ def getFile(ifile, version=3, debug=False):
         return getJSON(jfile=ifile, version=version, debug=debug)
     elif ext == ".yaml":
         return getYaml(yfile=ifile, version=version, debug=debug)
-    elif ext == ".html":
+    elif ext == ".html" or ext == ".htm":
         return getHTML(hfile=ifile, version=version, debug=debug)
     elif ext == ".txt":
         return getTxt(tfile=ifile, version=version, debug=debug)
