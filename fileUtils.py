@@ -1,4 +1,5 @@
 from os.path import basename, splitext, dirname, getsize
+from datetime import datetime, timedelta
 from fsUtils import isFile, isDir
 
 
@@ -42,3 +43,15 @@ def getDirBasics(idir):
         return idir.split('/')
     else:
         return []
+    
+def getCreatedTime(ifile):
+    if isFile(ifile):
+        return datetime.fromtimestamp(path.getctime(ifile))
+    else:
+        return None
+    
+def getModifiedTime(ifile):
+    if isFile(ifile):
+        return datetime.fromtimestamp(path.getmtime(ifile))
+    else:
+        return None
