@@ -67,6 +67,19 @@ def findSubExt(basedir, subdirs, ext, debug = False):
     sdfile = setSubDir(basedir, subdirs, forceExist, debug)
     return findExt(sdfile, ext, debug)
 
+def findWalk(basedir, debug = False):
+    retvals = {}
+    if debug: print("  findWalk("+basedir+")")
+    for rootdir,dirvals,files in walk(basedir):
+        if len(files) == 0: continue
+        if debug:
+            print("    -->",rootdir)
+        retval = [join(rootdir,x) for x in files]
+        retvals[rootdir] = retval
+
+    if debug: print("  findWalkExt("+basedir+"): "+str(len(retvals)))
+    return retvals
+
 def findWalkExt(basedir, ext, debug = False):
     retvals = []
     if debug: print("  findWalkExt("+basedir+", ext="+",".join(ext)+")")
