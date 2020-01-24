@@ -96,6 +96,26 @@ def findWalkExt(basedir, ext, debug = False):
     if debug: print("  findWalkExt("+basedir+", ext="+",".join(ext)+"): "+str(len(retvals)))
     return retvals
 
+def findWalkDirExt(basedir, ext, debug = False):
+    retvals = {}
+    if debug: print("  findWalkDirExt("+basedir+", ext="+",".join(ext)+")")
+    for rootdir,dirvals,files in walk(basedir):
+        if len(files) == 0: continue
+        if debug:
+            print("    -->",rootdir)
+        if isinstance(ext, list):
+            for exten in ext:
+                extFiles = [join(rootdir,x) for x in files if splitext(x)[1] == exten]
+                if len(extFiles) > 0:
+                    retvals[rootdir] = extFiles
+        else:
+            extFiles = [join(rootdir,x) for x in files if splitext(x)[1] == ext]
+            if len(extFiles) > 0:
+                retvals[rootdir] = extFiles
+
+    if debug: print("  findWalkExt("+basedir+", ext="+",".join(ext)+"): "+str(len(retvals)))
+    return retvals
+
 def findWalkPattern(basedir, pattern, debug = False):
     retvals = []
     if debug: print("  findWalkPattern("+basedir+", pattern="+",".join(pattern)+")")
