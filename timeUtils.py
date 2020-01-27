@@ -189,7 +189,7 @@ def elapsed(start, comment=None, showTime=True):
     seconds, microseconds = dtime.seconds, dtime.microseconds
     
     
-    print("Process [{0}] took ", end="")
+    print("Process [{0}] took ".format(comment), end="")
     ## Convert to minutes
     
     units = None
