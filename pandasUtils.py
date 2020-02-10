@@ -101,6 +101,19 @@ def getColData(data, colnums = None, colnames = None, copy=False):
         print("Not doing anything with the data in getColData")
         return data
     return subdata
+
+
+
+def getRowDataByColValue(data, key, value):
+    retval = data[data[key] == value]
+    if retval.shape[0] > 0:
+        return retval
+    else:
+        return None
+    
+def getRowByIndex(pdf, idx):
+    return pdf.loc[idx]    
+    
     
     
 def getRowData(data, rownums = None, rownames = None, copy=False):
