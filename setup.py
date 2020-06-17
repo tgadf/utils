@@ -3,7 +3,7 @@ import setuptools
 
 setup(
   name = 'utils',
-  py_modules = ['timeUtils', 'numpyUtils', 'pyUtils', 'sparkUtils', 'tsUtils', 'geoUtils', 'pandasUtils', 'tsneUtils', 'ioUtils', 'webUtils', 'fsUtils', 'searchUtils', 'uidUtils', 'fileUtils', 'strUtils'],
+  py_modules = ['timeUtils', 'numpyUtils', 'pyUtils', 'sparkUtils', 'tsUtils', 'geoUtils', 'pandasUtils', 'tsneUtils', 'ioUtils', 'webUtils', 'fsUtils', 'searchUtils', 'uidUtils', 'fileUtils', 'strUtils', 'listUtils'],
   version = '0.0.1',
   description = 'General Utility Function',
   long_description = open('README.md').read(),
