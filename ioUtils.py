@@ -69,8 +69,10 @@ def saveYaml(yfile, ydata):
 def getYaml(yfile, version=3, debug=False):
     if debug:
         print("Loading {0}".format(yfile))
-    ydata = yaml.load(open(yfile))
+    ydata = yaml.load(open(yfile), Loader=yaml.FullLoader)
     return ydata
+
+
 
 
 
