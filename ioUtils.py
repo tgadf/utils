@@ -99,7 +99,9 @@ def getHTML(hfile, version=3, debug=False):
 #
 ###############################################################################
 def saveTxt(tfile, tdata):
-    json.dump(jdata, open(jfile, "w"))
+    f = open(tfile, "w+")
+    f.write("\n".join(tdata))
+    f.close()
     
 def getTxt(tfile, version=3, debug=False):
     if debug:
@@ -208,6 +210,8 @@ def saveFile(ifile, idata, debug=False):
         saveJSON(jfile=ifile, jdata=idata)
     elif ext == ".yaml":
         saveYaml(yfile=ifile, ydata=idata)
+    elif ext == ".txt" or ext == ".dat":
+        saveTxt(yfile=ifile, ydata=idata)
     else:
         raise ValueError("Did not recognize extension format {0}".format(ext))
     if debug:
@@ -229,7 +233,7 @@ def getFile(ifile, version=3, debug=False):
         return getYaml(yfile=ifile, version=version, debug=debug)
     elif ext == ".html" or ext == ".htm":
         return getHTML(hfile=ifile, version=version, debug=debug)
-    elif ext == ".txt":
+    elif ext == ".txt" or ext == ".dat":
         return getTxt(tfile=ifile, version=version, debug=debug)
     else:
         raise ValueError("Did not recognize extension {0}".format(ext))
