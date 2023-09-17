@@ -1,0 +1,150 @@
+############################################################################################################
+## Terminal Appearance
+############################################################################################################
+alias ls='ls -G'
+alias lsf='ls -1d'
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+
+############################################################################################################
+## Common Terminal Commands
+############################################################################################################
+alias ll='ls -lrth'
+alias l='ls -lrth'
+alias dh='du -h -d 1'
+alias dhs='du -s */ | sort -n'
+alias t='top -o cpu'
+alias vms='ls /System/Volumes/VM | wc -l'
+
+############################################################################################################
+## Gotos (Common Locations)
+############################################################################################################
+alias down='cd ~/Downloads'
+alias doc='cd ~/Documents'
+
+############################################################################################################
+## self (.zshrc)
+############################################################################################################
+alias update='source ~/.zshrc'
+
+############################################################################################################
+## Music/Torrents DB Locations
+############################################################################################################
+alias moddb='cd /Volumes/Seagate/Discog'
+alias sumdb='cd ~/Music/Discog'
+alias rawdb='cd /Volumes/Piggy/Discog'
+alias matched='cd /Volumes/Piggy/Music/Matched'
+alias torrents='cd /Volumes/Seagate/Torrents'
+
+############################################################################################################
+## Code Work Space Basics
+############################################################################################################
+alias jup='jupyter notebook'
+alias pyinst='pwd ; python setup.py -q clean ; python setup.py -q install'
+alias build='poetry build'
+alias inst='poetry install'
+
+############################################################################################################
+## Git
+############################################################################################################
+git config --global user.name "tgadf"
+git config --global user.email tgadfort@gmail.com
+git config --global core.editor pico
+
+############################################################################################################
+## Environment
+############################################################################################################
+envdata () {
+    envloc="~/anaconda3/envs/${condaname}"
+    alias permdb="cd ${envloc}/pandb/pandb"
+    alias perm="cd ${envloc}/pandb"
+}
+
+condaprefix () {
+    . ${HOME}/anaconda3/bin/activate
+    conda activate ${condaname}
+}
+
+condasuffix () {
+    alias -g code="cd ${condaspace}"
+    envdata
+}
+
+act () {
+    condaname="py311"
+    condaprefix
+    condaspace="${HOME}/Documents/code"
+    condasuffix
+    export jport=9999
+}
+
+post () {
+    condaname="post"
+    condaprefix
+    condaspace="${HOME}/code"
+    condasuffix
+    export jport=9998
+}
+
+############################################################################################################
+## Environment-specific MusicMeta Scripts
+############################################################################################################
+mmeta () {
+    mmetadir="${condaspace}/musicmeta"
+    echo ${mmetadir}
+    cmds=("mid" "fixdir" "discno" "albumname")
+    for cmd in "${cmds[@]}"
+    do
+        alias ${cmd}='poe --root ${mmetadir} mid -dir "`pwd`"'
+    done
+}
+
+############################################################################################################
+## Remote
+############################################################################################################
+noteremote () {
+    if [[ -v jport ]]; then
+        echo "Going to Conda Space: ${condaspace}"
+        cd ${condaspace}
+        jupyter notebook --no-browser --port=${jport}
+    else
+        echo "jport is not set!!"
+    fi
+}
+
+rem () {
+    act
+    noterem
+}
+
+
+rempost () {
+    post
+    noteremote
+}
+
+
+#alias rem="act ; code ; noterem"
+#alias rempost="post ; code ; noterem"
+#alias noterem="jupyter notebook --no-browser --port=${jport}"
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/tgadfort/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/tgadfort/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/tgadfort/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/tgadfort/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+############################################################################################################
+## Poetry
+############################################################################################################
+export PATH="/Users/tgadfort/.local/bin:$PATH"
