@@ -46,7 +46,11 @@ class Timestat:
             return f"{numer}/{denom}"
         if self.verbose is True:
             print(f"{self.prefix} | {getStatus(n,N): <10} ... ", end="")
-        
+
+    def comment(self, cmt):
+        term = f"{self.prefix} | {cmt}"
+        print(term)        
+
     def update(self, n=None, N=None, cmt=None, init=True):
         def getRemaining(deltaT, n, N):
             if deltaT < 1 or n == 0:

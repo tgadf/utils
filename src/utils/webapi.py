@@ -8,6 +8,7 @@ from .webutil import sleep, wait
 
 class APIIO:
     def __init__(self, name, **kwargs):
+        self.verbose = kwargs.get('verbose', False)
         self.name     = name
         self.code     = None
         self.url      = None

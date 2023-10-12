@@ -235,6 +235,7 @@ class FileInfo(FSBase):
         self.isFile   = self.dirpath.isFile
         self.rmFile   = self.dirpath.rmFile
         self.mvFile   = self.dirpath.mvFile
+        self.cpFile   = self.dirpath.cpFile
 
     def __eq__(self, other):
         """Overrides the default implementation"""

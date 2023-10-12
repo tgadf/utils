@@ -1,7 +1,11 @@
+""" Common List-based Utility Functions """
+
+__all__ = ["getFlatList", "flattenLists", "assertType"]
+
 from collections import Counter
 
+
 def least_common(array, to_find=None):
-    
     """
     >>> least_common_values([1,1,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,4], 2)
     [(1, 2), (2, 4)]
@@ -14,8 +18,14 @@ def least_common(array, to_find=None):
     
 
 def getFlatList(listval):
+    """
+    Flatten two-tier list
+    """
+    
+    # assert isinstance(listval, list), f"getFlatList arg [{type(listval)}] is not a list"
     flat_list = [item for sublist in listval for item in sublist]
     return flat_list
+
 
 def flattenLists(values, rmNa=True, unique=False):
     if len(values) == 0:
@@ -24,27 +34,41 @@ def flattenLists(values, rmNa=True, unique=False):
     for value in values:
         try:
             group += [item for item in value if item is not None] if rmNa is True else [item for item in value]
-        except:
+        except Exception as error:
             continue
     retval = list(set(group)) if unique is True else group
     return retval
+
 
 def isIn(values, listval):
     if not isinstance(listval, list):
         listval = [listval]
     if not isinstance(values, list):
         values = [values]
-    known = False    
+    known = False
     for val in values:
         for lval in listval:
             if lval.find(val) != -1:
                 known = True
     return known
 
+
 def getIndex(listval, val):
     try:
         idx = listval.index(val)
-    except:
+    except Exception as error:
         idx = None
         
     return idx
+
+
+def assertType(listval: list, dtype) -> 'bool':
+    """
+    Test that all list values are type [dtype]
+    """
+    
+    # assert isinstance(listval, (list), f"getFlatList arg [{type(listval)}] is not a list"
+    retval = all([isinstance(item, dtype) for item in listval])
+    return retval
+    
+    
