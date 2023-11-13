@@ -1,6 +1,7 @@
 """ I/O Utility """
 
-__all__ = ["YAMLIO", "JSONIO", "PickleIO", "HTMLIO", "XMLIO", "CSVIO", "FileIO", "getFile", "getHTML"]
+__all__ = ["YAMLIO", "JSONIO", "PickleIO", "HTMLIO", "XMLIO",
+           "CSVIO", "FileIO", "getFile", "getHTML"]
 
 
 ###############################################################################
@@ -9,9 +10,8 @@ __all__ = ["YAMLIO", "JSONIO", "PickleIO", "HTMLIO", "XMLIO", "CSVIO", "FileIO",
 import joblib
 import json
 import yaml
-import pickle
 import h5py
-from pathlib import PosixPath,Path
+from pathlib import PosixPath, Path
 from io import StringIO
 from xml.etree import ElementTree
 from bs4 import BeautifulSoup
@@ -25,8 +25,8 @@ from .fsinfo import FileInfo
 
 class IOBase:
     def __init__(self, ifile, debug=False):
-        self.ifile=ifile
-        self.debug=debug
+        self.ifile = ifile
+        self.debug = debug
         
     def getDebug(self):
         if self.debug:
@@ -37,12 +37,12 @@ class HD5IO:
     def __init__(self, debug=False):
         self.debug = debug
         
-    def get(self, ifile):        
+    def get(self, ifile):
         return h5py.File(ifile, 'r')
     
     def save(self, ifile, idata):
         h5py.File(ifile, 'w')
-        yaml.dump(idata, open(ifile, "w"), default_flow_style=False, allow_unicode = True)
+        yaml.dump(idata, open(ifile, "w"), default_flow_style=False, allow_unicode=True)
         
         
 class YAMLIO:
@@ -53,7 +53,7 @@ class YAMLIO:
         return yaml.load(open(ifile), Loader=yaml.FullLoader)
     
     def save(self, ifile, idata):
-        yaml.dump(idata, open(ifile, "w"), default_flow_style=False, allow_unicode = True)
+        yaml.dump(idata, open(ifile, "w"), default_flow_style=False, allow_unicode=True)
 
         
 class JSONIO:
@@ -80,13 +80,13 @@ class PickleIO:
 
 class HTMLIO:
     def __init__(self, debug=False):
-        self.debug  = debug
+        self.debug = debug
         
     def get(self, ifile):
         self.bsdata = ifile
         if isinstance(ifile, FileInfo):
             self.bsdata = BeautifulSoup(open(ifile.path).read(), features="lxml")
-        elif isinstance(ifile, (PosixPath,Path)):
+        elif isinstance(ifile, (PosixPath, Path)):
             self.bsdata = BeautifulSoup(open(ifile).read(), features="lxml")
         elif isinstance(ifile, str):
             finfo = FileInfo(ifile)
@@ -142,23 +142,21 @@ class FileIO:
         self.extIO = {".p": PickleIO(), ".pickle": PickleIO(), ".json": JSONIO(), ".yaml": YAMLIO(),
                       ".html": HTMLIO(), ".htm": HTMLIO(), ".xml": XMLIO(), ".csv": CSVIO()}
 
-    def getIO(self, finfo):        
+    def getIO(self, finfo):
         ext = finfo.ext
         return self.extIO[ext] if ext in self.extIO else None
-        
-        
+                
     def get(self, ifile, **kwargs):
         finfo = FileInfo(ifile)
         extIO = self.getIO(finfo)
-        if extIO is None:
-            raise ValueError("Unknown file extension: [{0}] [{1}]".format(ifile, finfo.ext))
+        assert extIO is not None, f"Unknown file extension: [{ifile}] [{finfo.ext}]"
         if finfo.exists():
             retval = extIO.get(finfo.str, **kwargs)
             return retval
         else:
-            if self.debug: print("[{0}] does not exist. Returning None".format(ifile))
+            if self.debug:
+                print(f"[{ifile}] does not exist. Returning None")
             return None
-    
     
     def save(self, ifile, idata):
         finfo = FileInfo(ifile)
@@ -166,15 +164,16 @@ class FileIO:
         extIO.save(finfo.str, idata)
         
         
-def getFile(ifile):
+def getFile(ifile: str) -> 'bytes':
     io = FileIO()
     return io.get(ifile)
 
-def getHTML(ifile):
+
+def getHTML(ifile: str | bytes) -> 'BeautifulSoup':
     hio = HTMLIO()
-    if isinstance(ifile,bytes):
+    if isinstance(ifile, bytes):
         return hio.get(ifile)
-    elif isinstance(ifile,str):
+    elif isinstance(ifile, str):
         if ifile.startswith("/"):
             return hio.get(getFile(ifile))
         else:
