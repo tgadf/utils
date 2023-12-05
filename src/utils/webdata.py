@@ -9,7 +9,7 @@ from .webutil import wait, sleep
 
 class WebData:
     def __repr__(self):
-        return "WebData(code={self.code})"
+        return f"WebData(code={self.code})"
         
     def __init__(self, data, code):
         self.data = data

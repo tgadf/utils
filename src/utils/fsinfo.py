@@ -13,7 +13,7 @@ from shutil import move, copy, rmtree
 class FSPath:
     def __repr__(self):
         return f"FSPath(path={self.path})"
-
+    
     def __init__(self, path):
         self.path = Path(path)
         self.isPath = None
