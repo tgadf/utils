@@ -40,9 +40,11 @@ alias torrents='cd /Volumes/Seagate/Torrents'
 ## Code Work Space Basics
 ############################################################################################################
 alias jup='jupyter notebook'
+alias jlab='jupyter-lab'
 alias pyinst='pwd ; python setup.py -q clean ; python setup.py -q install'
 alias build='poetry build'
 alias inst='poetry install'
+alias pytest='python -m pytest'
 
 ############################################################################################################
 ## Git
@@ -54,6 +56,10 @@ git config --global core.editor pico
 ############################################################################################################
 ## Environment
 ############################################################################################################
+pyclean () {
+    find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+}
+
 envdata () {
     envloc="~/anaconda3/envs/${condaname}"
     alias permdb="cd ${envloc}/pandb/pandb"
@@ -61,13 +67,22 @@ envdata () {
 }
 
 condaprefix () {
-    . ${HOME}/anaconda3/bin/activate
+# . ${HOME}/anaconda3/bin/activate  # commented out by conda initialize
     conda activate ${condaname}
 }
 
 condasuffix () {
     alias -g code="cd ${condaspace}"
     envdata
+}
+
+music () {
+    condaname="musicorg"
+    condaprefix
+    condaspace="${HOME}/Documents/musicorg"
+    condasuffix
+    export jport=9997
+    alias jlab='jupyter-lab'
 }
 
 act () {
@@ -84,19 +99,60 @@ post () {
     condaspace="${HOME}/code"
     condasuffix
     export jport=9998
+    alias mdb="cd ${condaspace}/musicdb/src/musicdb"
+    alias mtest="cd ${condaspace}/musicdb/tests"
 }
+
+rflearn () {
+    condaname="rflearn"
+    condaprefix
+    condaspace="${HOME}/Documents/learning"
+    condasuffix
+    export jport=9996
+    alias jlab='jupyter-lab'
+}
+
+spinning () {
+    condaname="spinningup"
+    condaprefix
+    condaspace="${HOME}/Documents/spinningup"
+    condasuffix
+    export jport=9995
+    alias jlab='jupyter-lab'
+}
+
+finance () {
+    condaname="finance"
+    condaprefix
+    condaspace="${HOME}/Documents/finance"
+    condasuffix
+    export jport=9994
+    alias jlab='jupyter-lab'
+    envloc="/opt/anaconda3/envs/${condaname}"
+    alias finperm="cd ${envloc}/rumasfin"
+}
+
 
 ############################################################################################################
 ## Environment-specific MusicMeta Scripts
 ############################################################################################################
+gen_aliases() {
+    local cmd="${1:?No command to create aliases for.}"
+    local c=${cmd:0:1}
+    which -s ${c} || alias ${c}="mvn $cmd"
+}
+
 mmeta () {
     mmetadir="${condaspace}/musicmeta"
-    echo ${mmetadir}
-    cmds=("mid" "fixdir" "discno" "albumname")
-    for cmd in "${cmds[@]}"
-    do
-        alias ${cmd}='poe --root ${mmetadir} mid -dir "`pwd`"'
-    done
+    alias mid='poe --root ${mmetadir} mid -dir "`pwd`"'
+    alias fixdir='poe --root ${mmetadir} fixdir -dir "`pwd`"'
+    alias discno='poe --root ${mmetadir} discno -dir "`pwd`"'
+    alias albumname='poe --root ${mmetadir} albumname -dir "`pwd`"'
+}
+
+mym() {
+    mymusicdir="${condaspace}/mymusic"
+    alias known='poe --root ${mymusicdir} known ${1}'
 }
 
 ############################################################################################################
@@ -124,21 +180,16 @@ rempost () {
 }
 
 
-#alias rem="act ; code ; noterem"
-#alias rempost="post ; code ; noterem"
-#alias noterem="jupyter notebook --no-browser --port=${jport}"
-
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/tgadfort/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/tgadfort/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/tgadfort/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/opt/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/tgadfort/anaconda3/bin:$PATH"
+        export PATH="/opt/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -148,3 +199,18 @@ unset __conda_setup
 ## Poetry
 ############################################################################################################
 export PATH="/Users/tgadfort/.local/bin:$PATH"
+
+
+############################################################################################################
+## Homebrew
+############################################################################################################
+export PATH="$PATH:/opt/homebrew/bin"
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+path=('/Users/tgadfort/.juliaup/bin' $path)
+export PATH
+
+# <<< juliaup initialize <<<
